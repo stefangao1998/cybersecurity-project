@@ -1,0 +1,145 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.0.6">
+  <diagram name="Cloud Security Architecture" id="cloud-sec-arch">
+    <mxGraphModel dx="2698" dy="922" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FraGhJmieHPZDzwW8E1s-13" style="endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-1050" y="102.5" as="sourcePoint" />
+            <mxPoint x="-1007.2037181954245" y="102" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-14" style="endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-849.9962818045757" y="102" as="sourcePoint" />
+            <mxPoint x="-793" y="102.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-792.66" y="102" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-26" value="&lt;span style=&quot;text-wrap-mode: wrap;&quot;&gt;User (Browser)&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="-1080" y="80" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-29" value="Amazon Route 53 &#xa;(DNS Resolution)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-1007.27" y="80" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-31" value="Application Load Balancer &#xa;(distributes traffic)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-790" y="80" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-33" style="endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-632.73" y="102.5" as="sourcePoint" />
+            <mxPoint x="-575.7337181954243" y="103" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-575.3937181954243" y="102.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-34" value="AWS WAF &#xa;(filters malicious traffic)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-575.91" y="80" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-35" style="endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-418.64" y="102.5" as="sourcePoint" />
+            <mxPoint x="-361.6437181954243" y="103" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-361.30371819542427" y="102.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-36" value="AWS Shield &#xa;(DDoS Protection)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-361.81999999999994" y="80" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-37" style="endArrow=block;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="FraGhJmieHPZDzwW8E1s-38">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-277" y="142.5" as="sourcePoint" />
+            <mxPoint x="-470" y="206.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-38" value="VPC" style="swimlane;fillColor=#DAE8FC;" vertex="1" parent="1">
+          <mxGeometry x="-1087.27" y="215" width="1000" height="265" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-39" value="Public Subnet" style="swimlane;fillColor=#E1D5E7;" vertex="1" parent="FraGhJmieHPZDzwW8E1s-38">
+          <mxGeometry x="27.27" y="40" width="370" height="200" as="geometry">
+            <mxRectangle x="30" y="40" width="110" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-55" value="EC2 Instance (Web Server)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="FraGhJmieHPZDzwW8E1s-39">
+          <mxGeometry x="20" y="45" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-56" value="Security Group (80/443)" style="rounded=1;fillColor=#FFF2CC;" vertex="1" parent="FraGhJmieHPZDzwW8E1s-39">
+          <mxGeometry x="20" y="125" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-42" value="Private Subnet" style="swimlane;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="FraGhJmieHPZDzwW8E1s-38">
+          <mxGeometry x="600" y="40" width="342.27" height="200" as="geometry">
+            <mxRectangle x="517.27" y="40" width="120" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-43" value="S3 Bucket" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="FraGhJmieHPZDzwW8E1s-42">
+          <mxGeometry x="43.629999999999995" y="45" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-57" style="endArrow=block;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="FraGhJmieHPZDzwW8E1s-38" source="FraGhJmieHPZDzwW8E1s-55" target="FraGhJmieHPZDzwW8E1s-43">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="522.27" y="125" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-59" value="&lt;span style=&quot;font-size: 12px; text-wrap-mode: wrap; background-color: rgb(236, 236, 236);&quot;&gt;S3 (Static Content &amp;amp; Logs)&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="FraGhJmieHPZDzwW8E1s-57">
+          <mxGeometry x="0.0452" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-60" value="IAM &#xa;(Role-based control)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-1087.27" y="520" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-61" style="endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-1007.27" y="520" as="sourcePoint" />
+            <mxPoint x="-1007" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-62" value="CloudWatch Logs" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-462.28" y="520" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-63" style="endArrow=none;startArrow=blockThin;startFill=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;endFill=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="FraGhJmieHPZDzwW8E1s-62" target="FraGhJmieHPZDzwW8E1s-43">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-491" y="510" as="sourcePoint" />
+            <mxPoint x="-840" y="450" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-384" y="460" />
+              <mxPoint x="-384" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-67" value="&lt;span style=&quot;font-size: 12px; text-wrap-mode: wrap; background-color: rgb(236, 236, 236);&quot;&gt;CloudWatch (Monitoring &amp;amp; Alarms)&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="FraGhJmieHPZDzwW8E1s-63">
+          <mxGeometry x="0.1721" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-64" value="CodePipeline &#xa;(CI/CD automation)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-720" y="520" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-65" style="endArrow=block;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-641.86" y="520" as="sourcePoint" />
+            <mxPoint x="-641.86" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-70" value="KMS &#xa;(Secrets Encryption)" style="swimlane;fillColor=#D5E8D4;startSize=53;" vertex="1" parent="1">
+          <mxGeometry x="-920" y="520" width="157.27" height="62.5" as="geometry" />
+        </mxCell>
+        <mxCell id="FraGhJmieHPZDzwW8E1s-76" style="endArrow=block;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;startArrow=blockThin;startFill=1;" edge="1" parent="1" source="FraGhJmieHPZDzwW8E1s-60" target="FraGhJmieHPZDzwW8E1s-70">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-950" y="540" as="sourcePoint" />
+            <mxPoint x="-949.73" y="500" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-1009" y="600" />
+              <mxPoint x="-841" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
