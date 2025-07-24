@@ -1,0 +1,122 @@
+name: Deploy Static Website to EC2 via CloudFormation
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  security-events: write  # REQUIRED for CodeQL upload
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: ap-southeast-2
+      STACK_NAME: s-gao-new
+      CF_TEMPLATE: cloudformation/template.yaml
+      EC2_USER: ec2-user
+      EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    ##################################
+    # 1. Trivy Vulnerability Scanner #
+    ##################################
+    - name: Trivy - scan source code
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: fs
+        ignore-unfixed: true
+        severity: CRITICAL,HIGH
+        format: table
+        output: trivy-report.txt
+
+    - name: Upload Trivy report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: trivy-report
+        path: trivy-report.txt
+
+    ###############################
+    # 2. CodeQL Static Analysis   #
+    ###############################
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript  # adjust to your code language
+        queries: security-extended
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+    #############################################
+    # 3. Secret Scanner using custom shell script
+    #############################################
+    - name: Scan for hardcoded secrets
+      run: |
+        echo "Scanning for hardcoded secrets..."
+        
+        MATCHES=$(grep -riI --exclude-dir={.git,node_modules} \
+          -E 'AKIA[0-9A-Z]{16}|aws_secret_access_key|jwt|Bearer\s+[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+|password\s*=\s*["'\''][^"'\'']{4,}["'\'']' . || true)
+
+        echo "$MATCHES" > secret-scan-results.txt
+
+        COUNT=$(echo "$MATCHES" | grep -c '^' || true)
+
+        if [ "$COUNT" -gt 0 ]; then
+          echo "$COUNT potential hardcoded secrets found!" | tee -a secret-scan-results.txt
+        else
+          echo "No hardcoded secrets found." | tee secret-scan-results.txt
+        fi
+
+    - name: Upload Secret Scan Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: secret-scan
+        path: secret-scan-results.txt
+
+    ###########################
+    # Continue with Deployment
+    ###########################
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Deploy CloudFormation Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file $CF_TEMPLATE \
+          --stack-name $STACK_NAME \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Wait for EC2 to initialise
+      run: sleep 60
+
+    - name: Write EC2 SSH key to file
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY }}" > s-gao.pem
+        chmod 600 s-gao.pem
+
+    - name: Upload site to EC2 (to temp dir)
+      run: |
+        ssh -i s-gao.pem -o StrictHostKeyChecking=no $EC2_USER@${{ env.EC2_PUBLIC_IP }} "mkdir -p ~/site-temp"
+        scp -i s-gao.pem -o StrictHostKeyChecking=no -r site/* $EC2_USER@${{ env.EC2_PUBLIC_IP }}:~/site-temp/
+        ssh -i s-gao.pem -o StrictHostKeyChecking=no $EC2_USER@${{ env.EC2_PUBLIC_IP }} "ls -R"
+
+
+    - name: Move files into Nginx directory
+      run: |
+        ssh -i s-gao.pem -o StrictHostKeyChecking=no $EC2_USER@${{ env.EC2_PUBLIC_IP }} "sudo cp -r ~/site-temp/* /usr/share/nginx/html/"
+
+    - name: Restart Nginx on EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i s-gao.pem $EC2_USER@${{ env.EC2_PUBLIC_IP }} "sudo systemctl restart nginx"

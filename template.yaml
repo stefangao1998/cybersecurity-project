@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation Template to Deploy a Static Website on EC2 with Nginx
+
+Parameters:
+  KeyName:
+    Description: s-gao pem file
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: s-gao
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0f4521b7c36f0e065
+    Description: Use the default VPC
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-0aa69d27e39ae85bf
+    Description: Subnet in the same VPC
+
+
+Resources:
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH access
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-01267069d3f827ef9  # Amazon Linux 2023 AMI for ap-southeast-2
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          SubnetId: !Ref SubnetId
+          AssociatePublicIpAddress: true
+          GroupSet:
+            - !Ref WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: s-gao
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          amazon-linux-extras enable nginx1
+          yum install -y nginx
+          systemctl enable nginx
+          systemctl start nginx
+          echo "<h1>Deployed with CloudFormation - s-gao</h1>" > /usr/share/nginx/html/index.html
+
+Outputs:
+  InstancePublicIp:
+    Description: Public IP address of the EC2 instance
+    Value: !GetAtt WebServerInstance.PublicIp
+  InstanceId:
+    Description: EC2 instance ID
+    Value: !Ref WebServerInstance
